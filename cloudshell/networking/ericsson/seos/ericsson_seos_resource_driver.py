@@ -119,18 +119,6 @@ class EricssonSEOSResourceDriver(ResourceDriverInterface, NetworkingResourceDriv
         response = firmware_operations.load_firmware(path=path, vrf_management_name=vrf_management_name)
         firmware_operations.logger.info(response)
 
-    @context_from_args
-    def send_custom_command(self, context, custom_command):
-        """Send custom command
-
-        :return: result
-        :rtype: string
-        """
-
-        send_command_operations = EricssonRunCommandOperations()
-        response = send_command_operations.send_command(command=custom_command)
-        return response
-
     @GlobalLock.lock
     @context_from_args
     def update_firmware(self, context, remote_host, file_path):
@@ -147,6 +135,18 @@ class EricssonSEOSResourceDriver(ResourceDriverInterface, NetworkingResourceDriv
         firmware_operations.logger.info(response)
 
     @context_from_args
+    def run_custom_command(self, context, custom_command):
+        """Send custom command
+
+        :return: result
+        :rtype: string
+        """
+
+        send_command_operations = EricssonRunCommandOperations()
+        response = send_command_operations.run_custom_command(command=custom_command)
+        return response
+
+    @context_from_args
     def health_check(self, context):
         """Performs device health check
 
@@ -156,14 +156,38 @@ class EricssonSEOSResourceDriver(ResourceDriverInterface, NetworkingResourceDriv
         return state_operations.health_check()
 
     @context_from_args
-    def send_custom_config_command(self, context, custom_command):
+    def run_custom_config_command(self, context, custom_command):
         """Send custom command in configuration mode
 
         :return: result
         :rtype: string
         """
         send_command_operations = EricssonRunCommandOperations()
-        result_str = send_command_operations.send_config_command(command=custom_command)
+        result_str = send_command_operations.run_custom_config_command(command=custom_command)
+        return result_str
+
+    @context_from_args
+    def send_custom_command(self, context, custom_command):
+        """Send custom command in configuration mode
+
+        :return: result
+        :rtype: string
+        """
+
+        send_command_operations = EricssonRunCommandOperations()
+        response = send_command_operations.run_custom_command(command=custom_command)
+        return response
+
+    @context_from_args
+    def send_custom_config_command(self, context, custom_command):
+        """Send custom command in configuration mode
+
+        :return: result
+        :rtype: string
+        """
+
+        send_command_operations = EricssonRunCommandOperations()
+        result_str = send_command_operations.run_custom_config_command(command=custom_command)
         return result_str
 
     @context_from_args
